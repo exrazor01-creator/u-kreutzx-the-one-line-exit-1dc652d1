@@ -9,18 +9,27 @@ import os
 
 LETTER = "I hereby resign, effective immediately, because the printer has been promoted to middle management and I refuse to report to a machine that jams under pressure."
 
-def main():
-    # The bounty judges one line only: keep the letter a single line of
-    # at most 200 characters, with no trailing newline in the entry file.
-    assert 1 <= len(LETTER) <= 200, f"letter length {len(LETTER)} out of range"
-    assert "\n" not in LETTER and "\r" not in LETTER, "letter must be a single line"
-    assert LETTER.strip(), "letter must not be only whitespace"
-    assert LETTER == LETTER.strip(), "letter must not start or end with whitespace"
-    assert "  " not in LETTER, "letter must not contain double spaces"
-    os.makedirs("/output", exist_ok=True)
-    with open("/output/entry.txt", "w", encoding="utf-8") as f:
-        f.write(LETTER)
-    print(LETTER)
+def _check(text, limit):
+    """Refuse anything that is not one clean line inside the limit."""
+    if not isinstance(text, str) or not text:
+        raise ValueError("entry must be non-empty text")
+    if text.strip() != text:
+        raise ValueError("entry must not pad itself with spaces")
+    if len(text) > limit:
+        raise ValueError("entry runs past its character limit")
+    for bad in ("\n", "\r", "  "):
+        if bad in text:
+            raise ValueError("entry must stay a single clean line")
+    return text
+
+
+def main() -> None:
+    entry = _check(LETTER, 200)
+    directory = "/output"
+    os.makedirs(directory, exist_ok=True)
+    with open(directory + "/entry.txt", "w", encoding="utf-8") as handle:
+        handle.write(entry)
+    print(entry)
 
 if __name__ == "__main__":
     main()
