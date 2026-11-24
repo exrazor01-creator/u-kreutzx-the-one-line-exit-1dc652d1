@@ -16,6 +16,7 @@ def main():
     assert "\n" not in LETTER and "\r" not in LETTER, "letter must be a single line"
     assert LETTER.strip(), "letter must not be only whitespace"
     assert LETTER == LETTER.strip(), "letter must not start or end with whitespace"
+    assert "  " not in LETTER, "letter must not contain double spaces"
     os.makedirs("/output", exist_ok=True)
     with open("/output/entry.txt", "w", encoding="utf-8") as f:
         f.write(LETTER)
