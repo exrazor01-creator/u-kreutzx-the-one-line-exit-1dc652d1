@@ -20,6 +20,7 @@ def _check(text, limit):
     for bad in ("\n", "\r", "  "):
         if bad in text:
             raise ValueError("entry must stay a single clean line")
+    # Nothing else to prove: a clean single line is the whole entry.
     return text
 
 
